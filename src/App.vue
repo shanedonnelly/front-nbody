@@ -1,30 +1,61 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
+<!-- filepath: /src/App.vue -->
 <template>
   <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+    <div class="grid">
+      <div
+        v-for="(cell, index) in cells"
+        :key="index"
+        :style="{ backgroundColor: cell }"
+        class="cell"
+        @contextmenu.prevent="onRightClick" 
+        @click="onLeftClick"
+      ></div>
+    </div>
+    <div 
+      class="frame">
+      {{ message }}
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
+<script setup>
+import { ref } from 'vue'
+
+const cells = ref([]) // tableau qui contiendra la couleur de chaque cellule
+const message = ref('')
+
+// Remplit la grille en une seule ligne de code
+function fillGrid() {
+  cells.value = Array(500 * 500).fill('black').map(() => Math.random() < 0.1 ? 'white' : 'black')
+}
+
+// Appel de la fonction qui remplit la grille
+fillGrid()
+
+function onRightClick() {
+  message.value = "clic droit"
+}
+
+function onLeftClick() {
+  message.value = "clic gauche"
+}
+</script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(500, 2px);
+  gap: 0;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.cell {
+  width: 2px;
+  height: 2px;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.frame {
+  margin-top: 20px;
+  border: 1px solid black;
+  padding: 10px;
+  width: fit-content;
+  user-select: none;
 }
 </style>
